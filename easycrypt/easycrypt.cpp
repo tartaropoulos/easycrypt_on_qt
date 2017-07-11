@@ -10,14 +10,14 @@ EasyCrypt::EasyCrypt(QWidget *parent) : QMainWindow(parent)
     numberLineEdit->setValidator(new QRegExpValidator(regExp, this));
 
     //Enabling of buttons
-    connect(textEdit, SIGNAL(textChanged()), this, SLOT(enableNumberLineEdit()));
-    connect(numberLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(enableEncryptButton()));
-    connect(numberLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(enableDecryptButton()));
+    connect(textEdit, SIGNAL(textChanged()), SLOT(enableNumberLineEdit()));
+    connect(numberLineEdit, SIGNAL(textChanged(const QString&)), SLOT(enableEncryptButton()));
+    connect(numberLineEdit, SIGNAL(textChanged(const QString&)), SLOT(enableDecryptButton()));
 
     //Connecting of buttons
-    connect(encryptButton, SIGNAL(clicked()), this, SLOT(encrypt()));
-    connect(decryptButton, SIGNAL(clicked()), this, SLOT(decrypt()));
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(encryptButton, SIGNAL(clicked()), SLOT(encrypt()));
+    connect(decryptButton, SIGNAL(clicked()), SLOT(decrypt()));
+    connect(closeButton, SIGNAL(clicked()), SLOT(close()));
 }
 
 void EasyCrypt::enableNumberLineEdit()
