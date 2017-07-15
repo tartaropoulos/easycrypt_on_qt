@@ -9,7 +9,7 @@ class EasyCrypt : public QMainWindow, public Ui::EasyCryptWindow
     Q_OBJECT
 
 public:
-    EasyCrypt(QWidget *parent = 0);
+    explicit EasyCrypt(QWidget *parent = 0);
 private slots:
     void enableNumberLineEdit();
     void enableEncryptButton();
