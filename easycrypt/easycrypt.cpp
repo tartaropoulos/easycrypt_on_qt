@@ -10,14 +10,16 @@ EasyCrypt::EasyCrypt(QWidget *parent) : QMainWindow(parent)
     numberLineEdit->setValidator(new QRegExpValidator(regExp, this));
 
     //Enabling of buttons
-    connect(textEdit, SIGNAL(textChanged()), SLOT(enableNumberLineEdit()));
-    connect(numberLineEdit, SIGNAL(textChanged(const QString&)), SLOT(enableEncryptButton()));
-    connect(numberLineEdit, SIGNAL(textChanged(const QString&)), SLOT(enableDecryptButton()));
+    connect(textEdit, &QTextEdit::textChanged, this, &EasyCrypt::enableNumberLineEdit);
+    connect(numberLineEdit, &QLineEdit::textChanged, this, &EasyCrypt::enableEncryptButton);
+    connect(numberLineEdit, &QLineEdit::textChanged, this, &EasyCrypt::enableDecryptButton);
 
     //Connecting of buttons
-    connect(encryptButton, SIGNAL(clicked()), SLOT(encrypt()));
-    connect(decryptButton, SIGNAL(clicked()), SLOT(decrypt()));
-    connect(closeButton, SIGNAL(clicked()), SLOT(close()));
+    connect(encryptButton, &QPushButton::clicked, this, &EasyCrypt::slotEncrypt);
+    connect(this, &EasyCrypt::signalEncrypt, this, &EasyCrypt::encrypt);
+    connect(decryptButton, &QPushButton::clicked, this, &EasyCrypt::slotDecrypt);
+    connect(this, &EasyCrypt::signalDecrypt, this, &EasyCrypt::decrypt);
+    connect(closeButton, &QPushButton::clicked, this, &EasyCrypt::close);
 }
 
 void EasyCrypt::enableNumberLineEdit()
@@ -38,10 +40,22 @@ void EasyCrypt::enableDecryptButton()
     decryptButton->setEnabled(numberLineEdit->hasAcceptableInput());
 }
 
-void EasyCrypt::encrypt()
+void EasyCrypt::slotEncrypt()
 {
     QString text(textEdit->toPlainText());
     int number(numberLineEdit->text().toInt());
+    emit signalEncrypt(text, number);
+}
+
+void EasyCrypt::slotDecrypt()
+{
+    QString text(textEdit->toPlainText());
+    int number(numberLineEdit->text().toInt());
+    emit signalDecrypt(text, number);
+}
+
+void EasyCrypt::encrypt(QString& text, int& number)
+{
     int size(text.size());
 
     for(int i(0); i < number && number > 0 && !text.isEmpty(); ++i)
@@ -63,10 +77,8 @@ void EasyCrypt::encrypt()
     textEdit->setPlainText(text);
 }
 
-void EasyCrypt::decrypt()
+void EasyCrypt::decrypt(QString& text, int& number)
 {
-    QString text(textEdit->toPlainText());
-    int number(numberLineEdit->text().toInt());
     int size(text.size());
     int leftMiddle(size / 2);
     int rightMiddle(leftMiddle);
